@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Sharmila A Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0A192F;
+            --bg-secondary: #112240;
+            --accent: #64FFDA;
+            --accent-blue: #0EA5E9;
+            --text-light: #CCD6F6;
+            --text-muted: #8892B0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0D1F3C 100%);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: rgba(10, 25, 47, 0.95);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(100, 255, 218, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(100, 255, 218, 0.08);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-blue) 100%);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.2);
+            color: #51CF66;
+            border: 1px solid #51CF66;
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .form-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .form-text a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-text a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(100, 255, 218, 0.2);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Admin Login</h1>
+            </div>
+
+            <div id="alert" class="alert"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Enter your username" 
+                        required 
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Enter your password" 
+                        required 
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    Login
+                </button>
+            </form>
+
+            <div class="form-text">
+                Don't have an account? <a href="javascript:showRegister()">Register here</a>
+            </div>
+        </div>
+
+        <!-- Register Card (Hidden by default) -->
+        <div class="login-card" id="registerCard" style="display: none; margin-top: 2rem;">
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+                <h1>Admin Register</h1>
+            </div>
+
+            <div id="alertRegister" class="alert"></div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input 
+                        type="text" 
+                        id="regUsername" 
+                        placeholder="Choose a username" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input 
+                        type="email" 
+                        id="regEmail" 
+                        placeholder="Enter your email" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input 
+                        type="password" 
+                        id="regPassword" 
+                        placeholder="Create a password" 
+                        required 
+                        minlength="6"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="registerBtn">
+                    Register
+                </button>
+            </form>
+
+            <div class="form-text">
+                Already have an account? <a href="javascript:hideRegister()">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show register form
+        function showRegister() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('registerCard').style.display = 'block';
+        }
+
+        // Hide register form
+        function hideRegister() {
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('registerCard').style.display = 'none';
+        }
+
+        // Show alert
+        function showAlert(message, type = 'error', formId = 'login') {
+            const alertId = formId === 'register' ? 'alertRegister' : 'alert';
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+        }
+
+        // Hide alert
+        function hideAlert(formId = 'login') {
+            const alertId = formId === 'register' ? 'alertRegister' : 'alert';
+            const alert = document.getElementById(alertId);
+            alert.classList.remove('show');
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideAlert('login');
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!username || !password) {
+                showAlert('Please enter username and password', 'error', 'login');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading"></span>Logging in...';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Save token
+                    localStorage.setItem('adminToken', data.token);
+                    showAlert('Login successful! Redirecting...', 'success', 'login');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Login failed', 'error', 'login');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('Error: ' + error.message, 'error', 'login');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Login';
+            }
+        }
+
+        // Handle register
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideAlert('register');
+
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+
+            if (!username || !email || !password) {
+                showAlert('Please fill all fields', 'error', 'register');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters', 'error', 'register');
+                return;
+            }
+
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<span class="loading"></span>Registering...';
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Registration successful! Please login.', 'success', 'register');
+                    setTimeout(() => {
+                        hideRegister();
+                        document.getElementById('loginForm').reset();
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Registration failed', 'error', 'register');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showAlert('Error: ' + error.message, 'error', 'register');
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = 'Register';
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('adminToken');
+            if (token) {
+                // Verify token
+                fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/admin.html';
+                    } else {
+                        localStorage.removeItem('adminToken');
+                    }
+                });
+            }
+        });
+
+        // Rename login card ID
+        const card = document.querySelector('.login-card');
+        if (card) card.id = 'loginCard';
+    </script>
+</body>
+</html>
